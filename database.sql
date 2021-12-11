@@ -1,5 +1,5 @@
 -- CREATE DATABASE "saga_movies_weekend"
-
+--Done
 
 CREATE TABLE "movies" (
   "id" SERIAL PRIMARY KEY,
