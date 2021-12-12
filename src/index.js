@@ -15,6 +15,7 @@ import axios from 'axios';
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('SET_DETAILS', fetchDetails);
+    yield takeEvery('ADD_MOVIES', addMovies);
 }
 
 // fetchAllMovies GET route
@@ -22,8 +23,10 @@ function* fetchAllMovies() {
     // get all movies from the DB
     try {
         const movies = yield axios.get('/api/movie');
-        console.log('get all:', movies.data);
-        yield put({ type: 'SET_MOVIES', payload: movies.data });
+        console.log('fetchAllMovies GET /route:', movies.data);
+        yield put({ 
+            type: 'SET_MOVIES', 
+            payload: movies.data });
 
     } catch {
         console.log('get all error');
@@ -31,13 +34,11 @@ function* fetchAllMovies() {
         
 }
 
-
-
 // fetchDetails GET route
-function* fetchDetails () {
+function* fetchDetails (action) {
         // get all movies detail from the DB
         try {
-            const details = yield axios.get('/api/movie');
+            const details = yield axios.get(`/api/movie/${action.payload}`);
             console.log('get all movie details:', details.data);
             yield put({ type: 'SET_DETAILS', payload: details.data });
     
@@ -46,6 +47,24 @@ function* fetchDetails () {
         }
             
     }
+
+// POST route to grab new movie data to POST it to the DB
+function* addMovies (action) {
+    console.log('addMovie is Working', action.payload);
+    // get all movies detail from the DB
+    try {
+        const response = yield axios.post('/api/movie', action.payload);
+        yield put({ 
+            type: 'FETCH_MOVIES',
+            payload: details.data 
+        });
+
+    } catch {
+        console.log('addMovie POST error');
+        alert('New Movie Did NOT POST')
+    }
+        
+}   
 
 
 // Used to store movies returned from the server
