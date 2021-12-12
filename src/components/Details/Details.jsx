@@ -2,15 +2,23 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+
 // Details array is showing empty....figured out why?
 
 function Details (){
     console.log('in Detail page 🎥')
 
+    // use History
     let history = useHistory;
+
+    //Dispatch
     const dispatch = useDispatch();
+
+    //useSelector Details Reducer
     const details = useSelector(store => store.details);
 
+
+    // To fetch movie details in component
     useEffect(() => {
         dispatch({ 
                     type: 'SET_DETAILS', 
@@ -18,10 +26,11 @@ function Details (){
                 });
     }, []);
 
-// const handleClick() {
-// // use history to go back to Movie List page.
-
-// }
+    // For back To List Button
+const handleClick = () => {
+// use history to go back to Home/Movie List page.
+    history.push ('/');
+}
 
     return (
 
@@ -35,7 +44,7 @@ function Details (){
                         <img src={details.poster}/>
                         <h3>{details.genres}</h3>
                         <h3>{details.description}</h3>
-                        <button>Back To List</button>
+                        <button onClick={handleClick}>Back To List</button>
                     </div>
                 );
             })}
