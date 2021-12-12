@@ -2,12 +2,14 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+// Details array is showing empty....figured out why?
 
 function Details (){
+    console.log('in Detail page 🎥')
 
-    let 
+    let history = useHistory;
     const dispatch = useDispatch();
-    const movies = useSelector(store => store.movies);
+    const details = useSelector(store => store.details);
 
     useEffect(() => {
         dispatch({ 
@@ -15,10 +17,11 @@ function Details (){
                     payload: details 
                 });
     }, []);
-const handleButton() {
 
+// const handleClick() {
+// // use history to go back to Movie List page.
 
-}
+// }
 
     return (
 

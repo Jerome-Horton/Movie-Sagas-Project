@@ -78,19 +78,19 @@ const details = (state = [], action) => {
     }
 }
 
+// Create sagaMiddleware
+const sagaMiddleware = createSagaMiddleware();
+
 // Create one store that all components can use
 const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
-        details
+        details,
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),
 );
-
-// Create sagaMiddleware
-const sagaMiddleware = createSagaMiddleware();
 
 // Pass rootSaga into our sagaMiddleware
 sagaMiddleware.run(rootSaga);
