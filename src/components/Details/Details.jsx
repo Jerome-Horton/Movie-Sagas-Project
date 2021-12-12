@@ -21,7 +21,7 @@ function Details (){
     // To fetch movie details in component
     useEffect(() => {
         dispatch({ 
-                    type: 'SET_DETAILS', 
+                    type: 'SET_ID', 
                     payload: details 
                 });
     }, []);
