@@ -22,12 +22,39 @@ function MoviePage () {
     const [addGenre, setAddGenre] = useState("")
 
 
+let movieObject = { title: addMovie, poster: addUrl, description: addDescription, genre_id: addGenre}
+
+// function to Submit Movie Inputs form
+function submitInputs (event) {
+// prevent default for form
+    event.preventDefault()
+// Add alert to ensure form is not empty
+    if (addMovie === '' || addUrl === '' || addDescription === '' || addGenre === '') {
+        alert ('Please fill out form')
+    }
+        dispatch ({
+            type: 'ADD_MOVIE',
+            payload: movieObject
+        })
+// This will route to home page, which Movie List
+        history.push('/')
+
+}
+
+// function cancel button to allow the user to return to Home Page, which is Movie List
+function cancelButton () {
+// useHistory
+        history.push('/')
+}
+
+
+
     return (
 
         <div>
                     <h1>Enter New Movie</h1>
 
-                <form>
+                <form onSubmit={submitInputs}>
                     <input  required
                             type='text'
                             value={addMovie.title}
@@ -68,8 +95,8 @@ function MoviePage () {
                         <option value="12">Space-Opera</option>
                         <option value="13">Superhero</option>
                     </select>
-                    <button>Submit Movie</button>
-                    <button>Cancel Button</button>
+                    <input type="submit" value="submit"/>
+                    <button onClick={cancelButton}>Cancel Button</button>
                 </form>
         </div>
     );
