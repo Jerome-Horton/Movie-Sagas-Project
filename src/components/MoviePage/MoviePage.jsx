@@ -13,7 +13,7 @@ function MoviePage () {
 // useDispatch
     const dispatch = useDispatch();
 // use Selector
-    const movies = useSelector(store => store.movies);
+    // const movies = useSelector(store => store.movies);
 
     // useState for inputs field 
     const [addMovie, setAddMovie] = useState("")
@@ -23,6 +23,12 @@ function MoviePage () {
 
 
 let movieObject = { title: addMovie, poster: addUrl, description: addDescription, genre_id: addGenre}
+
+useEffect = (() => {
+        dispatch({
+            type: 'FETCH-GENRE'
+        })
+}, [])
 
 // function to Submit Movie Inputs form
 function submitInputs (event) {

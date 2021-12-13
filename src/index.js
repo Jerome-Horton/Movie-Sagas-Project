@@ -14,8 +14,12 @@ import axios from 'axios';
 // Create the rootSaga generator function
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
-    yield takeEvery('SET_DETAILS', fetchDetails);
-    yield takeEvery('ADD_MOVIES', addMovies);
+    yield takeEvery('FETCH_MOVIE_DETAILS', fetchDetails);
+    // yield takeEvery('ADD_MOVIES', addMovies);
+    yield takeEvery('FETCH_GENRES', fetchGenre);
+    yield takeEvery('FETCH_GENRES_DETAILS', fetchGenreDetails);
+    
+
 }
 
 // fetchAllMovies GET route
@@ -38,33 +42,63 @@ function* fetchAllMovies() {
 function* fetchDetails (action) {
         // get all movies detail from the DB
         try {
-            const details = yield axios.get(`/api/movie/${action.payload}`);
+            const selectMovie = action.payload
+            const details = yield axios.get(`/api/movie/movie-details/${selectMovie.id}`);
             console.log('get all movie details:', details.data);
-            yield put({ type: 'SET_DETAILS', payload: details.data });
+            yield put({ type: 'SET_MOVIE_DETAILS', payload: details.data });
     
-        } catch {
+        } catch (error) {
+            console.log('get all error');
+        }
+            
+    }
+
+    function* fetchGenreDetails (action) {
+        // get all movies detail from the DB
+        try {
+            const selectMovie = action.payload
+            const details = yield axios.get(`/api/selected-movie-genre/${selectMovie.id}`);
+            console.log('get all movie details:', details.data);
+            yield put({ type: 'SET_MOVIE_GENRE', payload: details.data });
+    
+        } catch (error) {
             console.log('get all error');
         }
             
     }
 
 // POST route to grab new movie data to POST it to the DB
-function* addMovies (action) {
-    console.log('addMovie is Working', action.payload);
-    // get all movies detail from the DB
+// function* addMovies (action) {
+//     console.log('addMovie is Working', action.payload);
+//     // get all movies detail from the DB
+//     try {
+//         const response = yield axios.post('/api/movie', action.payload);
+//         yield put({ 
+//             type: 'FETCH_MOVIES',
+//             payload: details.data 
+//         });
+
+//     } catch {
+//         console.log('addMovie POST error');
+//         alert('New Movie Did NOT POST')
+//     }
+        
+// }   
+
+function* fetchGenre() {
+    // get all movies from the DB
     try {
-        const response = yield axios.post('/api/movie', action.payload);
+        const genres = yield axios.get('/api/genre');
+        console.log('fetchGenre GET /route:', genres.data);
         yield put({ 
-            type: 'FETCH_MOVIES',
-            payload: details.data 
-        });
+            type: 'SET_GENRES', 
+            payload: genres.data });
 
     } catch {
-        console.log('addMovie POST error');
-        alert('New Movie Did NOT POST')
+        console.log('get all error');
     }
         
-}   
+}
 
 
 // Used to store movies returned from the server
@@ -88,9 +122,19 @@ const genres = (state = [], action) => {
 }
 
 // Used to store the movie details
-const details = (state = [], action) => {
+const selectDetails = (state = [], action) => {
     switch (action.type) {
-        case 'SET_DETAILS':
+        case 'SET_MOVIE_DETAILS':
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+// Used to store the movie details
+const genreDetails = (state = [], action) => {
+    switch (action.type) {
+        case 'SET_MOVIE_GENRE':
             return action.payload;
         default:
             return state;
@@ -105,7 +149,8 @@ const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
-        details,
+        selectDetails,
+        genreDetails
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),

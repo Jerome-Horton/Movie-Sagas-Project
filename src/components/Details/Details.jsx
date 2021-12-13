@@ -1,6 +1,8 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 
 // Details array is showing empty....figured out why?
@@ -9,22 +11,26 @@ function Details (){
     console.log('in Detail page 🎥')
 
     // use History
-    let history = useHistory;
+    let history = useHistory();
 
     //Dispatch
     const dispatch = useDispatch();
 
     //useSelector Details Reducer
-    const details = useSelector(store => store.details);
+    const details = useSelector(store => store.selectDetails);
+    const genres = useSelector(store => store.genres);
+
+    //useParams
+    const {id} = useParams();
 
 
     // To fetch movie details in component
     useEffect(() => {
         dispatch({ 
-                    type: 'SET_ID', 
-                    payload: details 
+                    type: 'FETCH_MOVIE_DETAILS', 
+                    payload: { id: id }
                 });
-    }, []);
+    });
 
     // For back To List Button
 const handleClick = () => {
@@ -33,26 +39,22 @@ const handleClick = () => {
 }
 
     return (
+                    <div>
+                            <h1>Details for {details.title}</h1>
+                            <img width="300px" src={details.poster}/>
+                            <p>{details.description}</p>
+                            <h2>Genres</h2>
+                            <ul>
+                                {genres.map((genre) => 
+                                   <li key={genre.name}>{genre.name}</li>
 
-        <main>
-        <h1>Movie Details</h1>
-        <section className="details">
-            {details.map(details => {
-                return (
-                    <div key={details.id} >
-                        <h3>{details.title}</h3>
-                        <img src={details.poster}/>
-                        <h3>{details.genres}</h3>
-                        <h3>{details.description}</h3>
-                        <button onClick={handleClick}>Back To List</button>
+                                  
+                                   
+                                   )}
+                            </ul>
+                                     <button onClick={() => handleClick()}>Back To List</button>
                     </div>
-                );
-            })}
-        </section>
-    </main>
-
-
-    )
-}
+            )
+    }
 
 export default Details;

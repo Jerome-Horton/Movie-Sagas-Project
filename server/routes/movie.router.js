@@ -17,10 +17,8 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/:id', (req, res) => {
+router.get('/movie-details/:id', (req, res) => {
   console.log('/:id successful', req.query.id);
-
-  const reqParams = req.params.id;
   const sqlQuery = `
     SELECT
     "movies".id,
@@ -35,11 +33,10 @@ router.get('/:id', (req, res) => {
     ON ("genres".id = "movies_genres".genre_id) WHERE "movies".id = $1 GROUP BY "movies".id, "movies".title,
     "movies".description, "movies".poster;
       `;
-
-  pool.query(sqlQuery, [reqParams])
+  pool.query(sqlQuery, [req.params.id])
     .then(result => {
       console.log('results', result.rows);
-      res.send(result.rows);
+      res.send(result.rows[0]);
     })
     .catch(err => {
       console.log('ERROR: Get all GENRE', err);
