@@ -2,18 +2,20 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
-
+import {useEffect} from 'react';
 
 
 function MoviePage () {
     console.log('in Movie Page 🎥');
+
+
 
 // useHistory
     let history = useHistory;
 // useDispatch
     const dispatch = useDispatch();
 // use Selector
-    // const movies = useSelector(store => store.movies);
+    const genres = useSelector(store => store.genres);
 
     // useState for inputs field 
     const [addMovie, setAddMovie] = useState("")
@@ -26,14 +28,15 @@ let movieObject = { title: addMovie, poster: addUrl, description: addDescription
 
 useEffect = (() => {
         dispatch({
-            type: 'FETCH-GENRE'
+            type: 'FETCH_GENRES'
         })
 }, [])
 
 // function to Submit Movie Inputs form
-function submitInputs (event) {
+function submitInputs () {
+    console.log('in SubmitInputs')
 // prevent default for form
-    event.preventDefault()
+    // event.preventDefault()
 // Add alert to ensure form is not empty
     if (addMovie === '' || addUrl === '' || addDescription === '' || addGenre === '') {
         alert ('Please fill out form')
@@ -60,7 +63,7 @@ function cancelButton () {
         <div>
                     <h1>Enter New Movie</h1>
 
-                <form onSubmit={submitInputs}>
+                <div>
                     <input  required
                             type='text'
                             value={addMovie.title}
@@ -100,10 +103,16 @@ function cancelButton () {
                         <option value="11">Science Fiction</option>
                         <option value="12">Space-Opera</option>
                         <option value="13">Superhero</option>
+                        {genres.map((genre) => {
+                        return(<option key={genre.id} 
+                                        value={genre.id}>
+                                        {genre.name}
+                                        </option>);
+                                })}
                     </select>
-                    <input type="submit" value="submit"/>
+                    <button onClick={submitInputs}>Submit</button>
                     <button onClick={cancelButton}>Cancel Button</button>
-                </form>
+                </div>
         </div>
     );
 }

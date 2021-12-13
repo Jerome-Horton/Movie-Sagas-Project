@@ -15,11 +15,10 @@ import axios from 'axios';
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('FETCH_MOVIE_DETAILS', fetchDetails);
-    // yield takeEvery('ADD_MOVIES', addMovies);
+    yield takeEvery('ADD_MOVIES', addMovies);
     yield takeEvery('FETCH_GENRES', fetchGenre);
     yield takeEvery('FETCH_GENRES_DETAILS', fetchGenreDetails);
     
-
 }
 
 // fetchAllMovies GET route
@@ -68,22 +67,22 @@ function* fetchDetails (action) {
     }
 
 // POST route to grab new movie data to POST it to the DB
-// function* addMovies (action) {
-//     console.log('addMovie is Working', action.payload);
-//     // get all movies detail from the DB
-//     try {
-//         const response = yield axios.post('/api/movie', action.payload);
-//         yield put({ 
-//             type: 'FETCH_MOVIES',
-//             payload: details.data 
-//         });
+function* addMovies (action) {
+    console.log('addMovie is Working', action.payload);
+    // get all movies detail from the DB
+    try {
+        const response = yield axios.post('/api/movie', action.payload);
+        yield put({ 
+            type: 'FETCH_MOVIES',
+            payload: details.data 
+        });
 
-//     } catch {
-//         console.log('addMovie POST error');
-//         alert('New Movie Did NOT POST')
-//     }
+    } catch {
+        console.log('addMovie POST error');
+        alert('New Movie Did NOT POST')
+    }
         
-// }   
+}   
 
 function* fetchGenre() {
     // get all movies from the DB
