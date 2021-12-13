@@ -57,7 +57,7 @@ function* fetchDetails (action) {
         // get all movies detail from the DB
         try {
             const selectMovie = action.payload
-            const details = yield axios.get(`/api/selected-movie-genre/${selectMovie.id}`);
+            const details = yield axios.get(`/api/genre/selected-movie-genre/${selectMovie.id}`);;
             console.log('get all movie details:', details.data);
             yield put({ type: 'SET_MOVIE_GENRE', payload: details.data });
     

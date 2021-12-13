@@ -18,7 +18,7 @@ function Details (){
 
     //useSelector Details Reducer
     const details = useSelector(store => store.selectDetails);
-    const genres = useSelector(store => store.genres);
+    const genres = useSelector(store => store.genreDetails);
 
     //useParams
     const {id} = useParams();
