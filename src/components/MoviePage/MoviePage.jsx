@@ -1,49 +1,52 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
-import {useEffect} from 'react';
+import { useEffect, useState } from 'react';
+// import {useEffect} from 'react';
 
 
 function MoviePage () {
     console.log('in Movie Page 🎥');
 
-
+// useEffect = (() => {
+//         dispatch({
+//             type: 'FETCH_GENRES'
+//         })
+// }, [])
 
 // useHistory
-    let history = useHistory;
+    let history = useHistory();
 // useDispatch
     const dispatch = useDispatch();
 // use Selector
     const genres = useSelector(store => store.genres);
 
     // useState for inputs field 
-    const [addMovie, setAddMovie] = useState("")
-    const [addUrl, setAddUrl] = useState("")
-    const [addDescription, setAddDescription] = useState("")
-    const [addGenre, setAddGenre] = useState("")
+    let [title, setTitle] = useState('');
+    let [poster, setPoster] = useState('');
+    let [description, setDescription] = useState('');
+    let [genre_id, setGenre_id] = useState(0);
 
-
-let movieObject = { title: addMovie, poster: addUrl, description: addDescription, genre_id: addGenre}
-
-useEffect = (() => {
-        dispatch({
-            type: 'FETCH_GENRES'
-        })
-}, [])
+// useEffect = (() => {
+//         dispatch({
+//             type: 'FETCH_GENRES'
+//         })
+// }, [])
 
 // function to Submit Movie Inputs form
 function submitInputs () {
     console.log('in SubmitInputs')
 // prevent default for form
     // event.preventDefault()
-// Add alert to ensure form is not empty
-    if (addMovie === '' || addUrl === '' || addDescription === '' || addGenre === '') {
-        alert ('Please fill out form')
-    }
+
         dispatch ({
             type: 'ADD_MOVIE',
-            payload: movieObject
+            payload: { 
+                title: title, 
+                poster: poster, 
+                description: description, 
+                genre_id: genre_id
+            }
         })
 // This will route to home page, which Movie List
         history.push('/')
@@ -57,7 +60,6 @@ function cancelButton () {
 }
 
 
-
     return (
 
         <div>
@@ -66,49 +68,33 @@ function cancelButton () {
                 <div>
                     <input  required
                             type='text'
-                            value={addMovie.title}
-                            onChange={(event) => setAddMovie({ ...addMovie, title: event.target.value })}
+                            value={title}
+                            onChange={(event) => setTitle(event.target.value)}
                             placeholder='Title' />
 
                     <input  required
                             type='text'
-                            value={addMovie.poster}
-                            onChange={(event) => setAddUrl({ ...addUrl, poster: event.target.value })}
+                            value={poster}
+                            onChange={(event) => setPoster(event.target.value)}
                             placeholder='Add Poster Image url' />
                     
                     <input  required
                             type='text'
                             maxLength={500}
                             name="description" 
-                            value={addDescription.poster}
-                            onChange={(event) => setAddDescription({ ...addDescription, description: event.target.value })}
+                            value={description}
+                            onChange={(event) => setDescription(event.target.value)}
                             placeholder= 'Description' />
 
                     <select 
-                        required
-                        name="genre_id"
-                        onChange={(event) => setAddGenre({ ...addGenre, genre_id: event.target.value })}
-                        value={addMovie.genre_id}>
-                        <option defaultValue=""> select here</option>
-                        <option value="1">Adventure</option>
-                        <option value="2">Animated</option>
-                        <option value="3">Biographical</option>
-                        <option value="4">Comedy</option>
-                        <option value="5">Disaster</option>
-                        <option value="6">Drama</option>
-                        <option value="7">Epic</option>
-                        <option value="8">Fantasy</option>
-                        <option value="9">Musical</option>
-                        <option value="10">Romantic</option>
-                        <option value="11">Science Fiction</option>
-                        <option value="12">Space-Opera</option>
-                        <option value="13">Superhero</option>
+                        placeholder="Choose a Genre"
+                        type="text"
+                        value={genre_id}
+                        onChange={(event) => setGenre_id(event.target.value)} 
+                        className="select-genre">
                         {genres.map((genre) => {
-                        return(<option key={genre.id} 
-                                        value={genre.id}>
-                                        {genre.name}
-                                        </option>);
-                                })}
+                            return(<option key={genre.id} value={genre.id}>{genre.name}</option>);
+                        })}
                     </select>
                     <button onClick={submitInputs}>Submit</button>
                     <button onClick={cancelButton}>Cancel Button</button>

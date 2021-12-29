@@ -1,60 +1,42 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import {useParams} from 'react-router-dom';
 
+function Details() {
 
-// Details array is showing empty....figured out why?
+    //functionality to route to a page
+    const history = useHistory();
 
-function Details (){
-    console.log('in Detail page 🎥')
-
-    // use History
-    let history = useHistory();
-
-    //Dispatch
+    //functionality to dispatch information to a saga or reducer
     const dispatch = useDispatch();
 
-    //useSelector Details Reducer
-    const details = useSelector(store => store.selectDetails);
-    const genres = useSelector(store => store.genreDetails);
+    //creates a redux store instance for movieDetails reducer
+    const movieDetails = useSelector(store => store.Details);
 
-    //useParams
-    const {id} = useParams();
-
-
-    // To fetch movie details in component
-    useEffect(() => {
-        dispatch({ 
-                    type: 'FETCH_MOVIE_DETAILS', 
-                    payload: { id: id }
-                });
-    });
-
-    // For back To List Button
-const handleClick = () => {
-// use history to go back to Home/Movie List page.
-    history.push ('/');
-}
+    //routes to home page and clears movie details reducer
+    const HomePage = () => {
+        dispatch({ type: 'CLEAR_MOVIE_DETAILS', payload: [] });
+        history.push('/');
+    }
 
     return (
-                    <div>
-                            <h1>Details for {details.title}</h1>
-                            <img width="300px" src={details.poster}/>
-                            <p>{details.description}</p>
-                            <h2>Genres</h2>
-                            <ul>
-                                {genres.map((genre) => 
-                                   <li key={genre.name}>{genre.name}</li>
-
-                                  
-                                   
-                                   )}
-                            </ul>
-                                     <button onClick={() => handleClick()}>Back To List</button>
-                    </div>
-            )
-    }
+        <>
+            {movieDetails.map(movieDetails => {
+                return (<div key={movieDetails.id} >
+                    <h3>{movieDetails.title}</h3>
+                    <img src={movieDetails.poster}
+                        alt={movieDetails.title}
+                    />
+                    {movieDetails.genres.map(genre => {
+                        return (<h4>{genre}</h4>)
+                    })}
+                    {movieDetails.description}
+                </div>)
+            })}
+            <br />
+            <button id="back-button" onClick={HomePage}>Back to List</button>
+        </>
+    )
+}
 
 export default Details;

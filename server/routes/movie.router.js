@@ -17,22 +17,14 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/movie-details/:id', (req, res) => {
-  console.log('/:id successful', req.query.id);
+router.get('/details/:id', (req, res) => {
+  console.log('/:id successful', req.params.id);
   const sqlQuery = `
-    SELECT
-    "movies".id,
-    "movies".title,
-    "movies".description,
-    "movies".poster,
-    ARRAY_AGG("genres".name) "genres"
-    FROM "movies"
-    JOIN "movies_genres"
-    ON ("movies".id = "movies_genres".movie_id)
-    JOIN "genres"
-    ON ("genres".id = "movies_genres".genre_id) WHERE "movies".id = $1 GROUP BY "movies".id, "movies".title,
-    "movies".description, "movies".poster;
-      `;
+  SELECT movies.title, movies.poster, movies.description, 
+  ARRAY_AGG(genres.name) as genres FROM movies JOIN movies_genres 
+  ON movie_id = movies.id JOIN genres ON genres.id = genre_id 
+  WHERE movies.id=$1 GROUP BY movies.title, movies.poster, 
+  movies.description`;
   pool.query(sqlQuery, [req.params.id])
     .then(result => {
       console.log('results', result.rows);

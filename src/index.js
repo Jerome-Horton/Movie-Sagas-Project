@@ -15,9 +15,8 @@ import axios from 'axios';
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('FETCH_MOVIE_DETAILS', fetchDetails);
-    yield takeEvery('ADD_MOVIES', addMovies);
+    yield takeEvery('ADD_MOVIES', AddMovies);
     yield takeEvery('FETCH_GENRES', fetchGenre);
-    yield takeEvery('FETCH_GENRES_DETAILS', fetchGenreDetails);
     
 }
 
@@ -41,54 +40,38 @@ function* fetchAllMovies() {
 function* fetchDetails (action) {
         // get all movies detail from the DB
         try {
-            const selectMovie = action.payload
-            const details = yield axios.get(`/api/movie/movie-details/${selectMovie.id}`);
-            console.log('get all movie details:', details.data);
-            yield put({ type: 'SET_MOVIE_DETAILS', payload: details.data });
+            const movieDetails = yield axios.get(`/api/movie/details/${action.payload}`)
+            console.log('get movie details', movieDetails.data);
+            yield put({ type: 'SET_MOVIE_DETAILS', payload: movieDetails.data });
     
-        } catch (error) {
-            console.log('get all error');
+        } catch(err) {
+            console.log('get all movie details saga errors', err);
         }
             
     }
 
-    function* fetchGenreDetails (action) {
-        // get all movies detail from the DB
-        try {
-            const selectMovie = action.payload
-            const details = yield axios.get(`/api/genre/selected-movie-genre/${selectMovie.id}`);;
-            console.log('get all movie details:', details.data);
-            yield put({ type: 'SET_MOVIE_GENRE', payload: details.data });
-    
-        } catch (error) {
-            console.log('get all error');
-        }
-            
-    }
 
 // POST route to grab new movie data to POST it to the DB
-function* addMovies (action) {
+function* AddMovies (action) {
     console.log('addMovie is Working', action.payload);
     // get all movies detail from the DB
     try {
-        const response = yield axios.post('/api/movie', action.payload);
+        const AddMovies = yield axios.post('/api/movie', action.payload);
         yield put({ 
             type: 'FETCH_MOVIES',
-            payload: details.data 
         });
 
     } catch {
         console.log('addMovie POST error');
-        alert('New Movie Did NOT POST')
     }
         
 }   
 
-function* fetchGenre() {
+function* fetchGenre(action) {
     // get all movies from the DB
     try {
         const genres = yield axios.get('/api/genre');
-        console.log('fetchGenre GET /route:', genres.data);
+        console.log('fetchGenre GET /route:', action);
         yield put({ 
             type: 'SET_GENRES', 
             payload: genres.data });
@@ -110,6 +93,15 @@ const movies = (state = [], action) => {
     }
 }
 
+const addMovies = (state = [], action) => {
+    switch (action.type) {
+        case 'SET_ADD_MOVIE':
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
 // Used to store the movie genres
 const genres = (state = [], action) => {
     switch (action.type) {
@@ -121,24 +113,17 @@ const genres = (state = [], action) => {
 }
 
 // Used to store the movie details
-const selectDetails = (state = [], action) => {
+const Details = (state = [], action) => {
     switch (action.type) {
         case 'SET_MOVIE_DETAILS':
             return action.payload;
+        case 'CLEAR_MOVIE_DETAILS':
+            return action.payload;    
         default:
             return state;
     }
 }
 
-// Used to store the movie details
-const genreDetails = (state = [], action) => {
-    switch (action.type) {
-        case 'SET_MOVIE_GENRE':
-            return action.payload;
-        default:
-            return state;
-    }
-}
 
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
@@ -148,8 +133,8 @@ const storeInstance = createStore(
     combineReducers({
         movies,
         genres,
-        selectDetails,
-        genreDetails
+        addMovies,
+        Details
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),

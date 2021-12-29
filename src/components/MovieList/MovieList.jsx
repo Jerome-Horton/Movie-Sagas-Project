@@ -10,7 +10,23 @@ function MovieList() {
     const history = useHistory();
 
     const movies = useSelector(store => store.movies);
-    const genres = useSelector(store => store.genres);
+    // const genres = useSelector(store => store.genres);
+
+// This routes to Movie Page form to add a new movie
+    const addNewMovie = () => {
+        history.push('/MoviePage')
+    }
+
+// this will route to detail page for a specific movie based on the id
+//and dispatch action to saga to fetch movie details from reducer   
+    const movieDetails = (id) => {
+        dispatch ({
+            type: 'FETCH_MOVIE_DETAILS', 
+            payload: id
+        })
+// useHistory to go to Details Page
+    history.push('/details');
+    }
 
     useEffect(() => {
         dispatch({ 
@@ -22,36 +38,22 @@ function MovieList() {
 
     }, []);
 
-    //Function to dispatch Fetch Details and history onClick     
-    const handleClick = (movie) => {
-        dispatch ({
-            type: 'FETCH_DETAILS', payload: movie
-        })
-        dispatch ({
-            type: 'FETCH_GENRES_DETAILS', payload: movie
-        })
-    // useHistory to go to Details Page
-    history.push(`/movie-details/${movie.id}`);
-    }
-
     return (
         <main>
             <h1>Movie List</h1>
+            <button onClick={addNewMovie}>Add a Movie!</button>
             <section className="movies">
                 {movies.map(movie => {
                     return (
                         <div key={movie.id}> 
-                            <div key={movie.id} className="poster-title">
-                                <h3 onClick={() => handleClick(movie)}>{movie.title}</h3>
-                                <img className="moviePosters" onClick={() => handleClick(movie)} src={movie.poster} alt={movie} />
-
-                            </div>
+                                <h3>{movie.title}</h3>
+                                <img src={movie.poster} alt={movie.title}
+                                onClick={(event) => movieDetails(movie.id)}  />
                         </div>
                     );
                 })}
             </section>
         </main>
-
     );
 }
 
