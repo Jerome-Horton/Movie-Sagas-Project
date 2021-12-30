@@ -14,9 +14,9 @@ import axios from 'axios';
 // Create the rootSaga generator function
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
-    yield takeEvery('FETCH_MOVIE_DETAILS', fetchDetails);
     yield takeEvery('ADD_MOVIES', AddMovies);
     yield takeEvery('FETCH_GENRES', fetchGenre);
+    yield takeEvery('FETCH_MOVIE_DETAILS', fetchDetails);
     
 }
 
@@ -45,7 +45,7 @@ function* fetchDetails (action) {
             yield put({ type: 'SET_MOVIE_DETAILS', payload: movieDetails.data });
     
         } catch(err) {
-            console.log('get all movie details saga errors', err);
+            console.log('fetchDetails saga errors', err);
         }
             
     }
@@ -67,11 +67,11 @@ function* AddMovies (action) {
         
 }   
 
-function* fetchGenre(action) {
+function* fetchGenre() {
     // get all movies from the DB
     try {
         const genres = yield axios.get('/api/genre');
-        console.log('fetchGenre GET /route:', action);
+        console.log('fetchGenre GET /route:', genres.data);
         yield put({ 
             type: 'SET_GENRES', 
             payload: genres.data });
@@ -113,12 +113,12 @@ const genres = (state = [], action) => {
 }
 
 // Used to store the movie details
-const Details = (state = [], action) => {
+const movieDetails = (state = [], action) => {
     switch (action.type) {
         case 'SET_MOVIE_DETAILS':
-            return action.payload;
+            return action.payload;  
         case 'CLEAR_MOVIE_DETAILS':
-            return action.payload;    
+                return action.payload;
         default:
             return state;
     }
@@ -134,7 +134,7 @@ const storeInstance = createStore(
         movies,
         genres,
         addMovies,
-        Details
+        movieDetails
     }),
     // Add sagaMiddleware to our store
     applyMiddleware(sagaMiddleware, logger),

@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-function Details() {
+function movieDetails() {
 
     //functionality to route to a page
     const history = useHistory();
@@ -11,11 +11,11 @@ function Details() {
     const dispatch = useDispatch();
 
     //creates a redux store instance for movieDetails reducer
-    const movieDetails = useSelector(store => store.Details);
+    const movieDetails = useSelector(store => store.movieDetails);
 
     //routes to home page and clears movie details reducer
     const HomePage = () => {
-        dispatch({ type: 'CLEAR_MOVIE_DETAILS', payload: [] });
+        dispatch({ type: 'CLEAR_MOVIE_DETAILS', payload: [] }); 
         history.push('/');
     }
 
@@ -39,4 +39,4 @@ function Details() {
     )
 }
 
-export default Details;
+export default movieDetails;
