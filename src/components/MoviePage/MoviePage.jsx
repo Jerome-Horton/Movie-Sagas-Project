@@ -40,7 +40,7 @@ function submitInputs () {
     // event.preventDefault()
 
         dispatch ({
-            type: 'ADD_MOVIE',
+            type: 'ADD_MOVIES',
             payload: { 
                 title: title, 
                 poster: poster, 

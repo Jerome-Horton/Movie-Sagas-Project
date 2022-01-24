@@ -30,7 +30,7 @@ function MovieList() {
             payload: id
         })
 // useHistory to go to Details Page
-    history.push('/details');
+    history.push(`/details`);
     }
 
     useEffect(() => {
@@ -56,6 +56,7 @@ function MovieList() {
                         <div key={movie.id}> 
                                 <h3>{movie.title}</h3>
                                 <img 
+                                style={{height:275}}
                                     src={movie.poster} 
                                     alt={movie.title}
                                     onClick={(event) => movieDetails(movie.id)}  />

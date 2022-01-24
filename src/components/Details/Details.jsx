@@ -1,12 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory,useParams } from 'react-router-dom';
 
 function movieDetails() {
 
     //functionality to route to a page
     const history = useHistory();
-
+    const params = useParams();
+    console.log('params',)
     //functionality to dispatch information to a saga or reducer
     const dispatch = useDispatch();
 
@@ -21,20 +22,25 @@ function movieDetails() {
 
     return (
         <>
-            {movieDetails.map(movieDetails => {
-                return (<div key={movieDetails.id} >
+        <div>
+           
+                
+                    <div key={movieDetails.id} >
                     <h3>{movieDetails.title}</h3>
-                    <img src={movieDetails.poster}
+                    <img 
+                        style={{height:275}}
+                        src={movieDetails.poster}
                         alt={movieDetails.title}
                     />
-                    {movieDetails.genres.map(genre => {
+                    {movieDetails?.genres?.map(genre => {
                         return (<h4>{genre}</h4>)
                     })}
                     {movieDetails.description}
-                </div>)
-            })}
+                </div>
+            
             <br />
             <button id="back-button" onClick={HomePage}>Back to List</button>
+            </div> 
         </>
     )
 }
